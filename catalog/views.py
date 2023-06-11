@@ -1,22 +1,26 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, TemplateView
 
 from catalog.models import Product
 
 
-class ContactListView(ListView):
-    paginate_by = 3
+class ProductListView(ListView):
+    paginate_by = 4
     model = Product
+    extra_context = {
+        'title': 'Главная'
+    }
 
 
 # Create your views here.
-def index(request):
-    product_list = Product.objects.all()
-    context = {
-        'object_list': product_list,
-        'title': 'Главная'
-    }
-    return render(request, 'catalog/home.html', context, )
+# def index(request):
+#     product_list = Product.objects.all()
+#     context = {
+#         'object_list': product_list,
+#         'title': 'Главная'
+#     }
+#     return render(request, 'catalog/home.html', context, )
 
 
 def contact(request):
