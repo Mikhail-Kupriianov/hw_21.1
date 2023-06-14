@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 NULLABLE = {'null': True, 'blank': True}
 
@@ -15,8 +16,14 @@ class Blog(models.Model):
     blog_is_publicated = models.BooleanField(verbose_name='опубликован', default=False)
     blog_views_count = models.BigIntegerField(verbose_name='количество просмотров', default=0)
 
-    # def get_absolute_url(self):
-    #     return reverse('blogs_item', kwargs={'pk': self.pk})
+    def inc_view_count(self):
+        self.blog_views_count += 1
+        return self.blog_views_count
+
+    def save(self, *args, **kwargs):  # new
+        if not self.blog_slug:
+            self.blog_slug = slugify(self.blog_title)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.blog_title}\nСоздан: {self.blog_created_at}'

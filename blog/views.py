@@ -13,15 +13,27 @@ class BlogListView(ListView):
         'title': 'Блоги'
     }
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(blog_is_publicated=True)
+        return queryset
+
 
 class BlogDetailView(DetailView):
     model = Blog
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
-        print(context_data)
         context_data['title'] = context_data['object']
         return context_data
+
+    def get_object(self, queryset=None):
+
+        post = super().get_object()
+        post.inc_view_count()
+        post.save()
+
+        return post
 
 
 class BlogCreateView(CreateView):
